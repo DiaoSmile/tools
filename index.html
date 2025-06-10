@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汪律师收入计算器</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --background-color: #f8f9fa;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .total-amount {
+            font-size: 1.4rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+            background: #e8f0fe;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .top-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .param-config {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+        }
+
+        .param-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .param-group h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .param-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            padding: 0.3rem 0;
+        }
+
+        .param-row label {
+            flex: 1;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .param-row input {
+            width: 120px;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .param-row input:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .basic-info {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .case-input-group {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+            background: white;
+            padding: 1.2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .case-input-group input[type="number"] {
+            width: 240px;
+            padding: 0.8rem 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            color: var(--primary-color);
+            height: 42px;
+        }
+
+        .case-input-group input[type="number"]:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            background: white;
+        }
+
+        .case-input-group input[type="number"]::placeholder {
+            color: #999;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 0.8rem;
+            padding: 0;
+            background: transparent;
+            border: none;
+            flex: 1;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .checkbox-group label {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            padding: 0 1.2rem;
+            border-radius: 21px;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            margin: 0;
+            font-size: 0.95rem;
+            min-width: 90px;
+            height: 42px;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            white-space: nowrap;
+        }
+
+        .checkbox-group label:hover {
+            background: #f8f9fa;
+            color: var(--primary-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkbox-group label::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--secondary-color);
+            transform: scaleY(0);
+            transition: transform 0.2s ease;
+        }
+
+        .checkbox-group input[type="checkbox"]:checked+label {
+            background: #e8f0fe;
+            color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            transform: translateY(1px);
+        }
+
+        .checkbox-group input[type="checkbox"]:checked+label::before {
+            transform: scaleY(1);
+        }
+
+        .checkbox-group label.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f5f5f5;
+            border-color: #ddd;
+            box-shadow: none;
+        }
+
+        .checkbox-group label.disabled::before {
+            background: #ddd;
+        }
+
+        .checkbox-group input[type="checkbox"]:disabled+label {
+            cursor: not-allowed;
+        }
+
+        .checkbox-group label:active {
+            transform: translateY(1px);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .checkbox-group label[for="signCheckbox"] {
+            border-color: #3498db;
+            color: #3498db;
+            background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+        }
+
+        .checkbox-group label[for="handleCheckbox"] {
+            border-color: #2ecc71;
+            color: #2ecc71;
+            background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+        }
+
+        .checkbox-group label[for="noneCheckbox"] {
+            border-color: #95a5a6;
+            color: #95a5a6;
+            background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+            min-width: 100px;
+            padding: 0 1.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"]:checked+label[for="signCheckbox"] {
+            background: linear-gradient(to bottom, #ebf5fb, #e3f2fd);
+            border-color: #3498db;
+            color: #3498db;
+        }
+
+        .checkbox-group input[type="checkbox"]:checked+label[for="handleCheckbox"] {
+            background: linear-gradient(to bottom, #eafaf1, #e8f5e9);
+            border-color: #2ecc71;
+            color: #2ecc71;
+        }
+
+        .checkbox-group input[type="checkbox"]:checked+label[for="noneCheckbox"] {
+            background: linear-gradient(to bottom, #f4f6f6, #ecf0f1);
+            border-color: #95a5a6;
+            color: #95a5a6;
+        }
+
+        .case-list {
+            margin-top: 1.5rem;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+        }
+
+        .case-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .case-item .case-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .case-item .case-amount {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .case-item .case-type {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .case-item .case-type span {
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: #e8f0fe;
+            color: var(--secondary-color);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .case-item .case-type span.sign {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-color: rgba(25, 118, 210, 0.2);
+        }
+
+        .case-item .case-type span.handle {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-color: rgba(46, 125, 50, 0.2);
+        }
+
+        .case-item .case-type span.none {
+            background: #f5f5f5;
+            color: #616161;
+            border-color: rgba(97, 97, 97, 0.2);
+        }
+
+        .case-item .case-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .case-item button {
+            padding: 0.4rem 1rem;
+            font-size: 0.9rem;
+            margin: 0;
+            width: auto;
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .case-item button:hover {
+            background: #e9ecef;
+            color: var(--primary-color);
+        }
+
+        .add-case-btn {
+            background-color: var(--success-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 1rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            box-shadow: 0 2px 4px rgba(46, 204, 113, 0.2);
+            width: auto;
+            height: auto;
+        }
+
+        .add-case-btn:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+        }
+
+        .add-case-btn:active {
+            transform: translateY(0);
+        }
+
+        .add-case-btn .plus-icon {
+            position: relative;
+            width: 16px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-case-btn .plus-icon::before,
+        .add-case-btn .plus-icon::after {
+            content: '';
+            position: absolute;
+            background-color: white;
+            border-radius: 2px;
+        }
+
+        .add-case-btn .plus-icon::before {
+            width: 10px;
+            height: 2px;
+            top: 7px;
+            left: 3px;
+        }
+
+        .add-case-btn .plus-icon::after {
+            width: 2px;
+            height: 10px;
+            left: 7px;
+            top: 3px;
+        }
+
+        .add-case-btn .btn-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .mode-select {
+            background: var(--background-color);
+            padding: 1.2rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+        }
+
+        .mode-select h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .radio-group input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .income-comparison {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .result-card {
+            background: var(--background-color);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            width: 100%;
+            min-width: 450px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .result-card h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .result-card h3 .difference-badge {
+            font-size: 1rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-card h3 .difference-badge.positive {
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.2);
+            background: linear-gradient(to right, #f0fff4, #fff);
+        }
+
+        .result-card h3 .difference-badge.negative {
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.2);
+            background: linear-gradient(to right, #fff5f5, #fff);
+        }
+
+        .result-card h3 .difference-badge .value {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .result-card h3 .difference-badge .percentage {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .fee-breakdown {
+            background: white;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .fee-breakdown:hover {
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .fee-breakdown p {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.8rem 0;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .fee-breakdown p:hover {
+            color: var(--primary-color);
+        }
+
+        .fee-breakdown p span {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .highlight {
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            min-height: 100px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg,
+                    rgba(52, 152, 219, 0.2),
+                    rgba(46, 204, 113, 0.2),
+                    rgba(52, 152, 219, 0.2));
+            background-size: 200% 200%;
+            animation: wave 8s ease infinite;
+            z-index: 1;
+        }
+
+        .highlight::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg,
+                    rgba(44, 62, 80, 0.9),
+                    rgba(52, 73, 94, 0.9));
+            z-index: 2;
+        }
+
+        .income-value {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .income-label {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .income-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .income-amount::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.5),
+                    transparent);
+            animation: shine 2s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            50% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .highlight:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .highlight:hover::before {
+            animation: wave 4s ease infinite;
+        }
+
+        .difference-box {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            min-height: 100px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e9ecef;
+        }
+
+        .difference-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            height: 100%;
+        }
+
+        .difference-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            width: 100%;
+            height: 45px;
+            transition: all 0.3s ease;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e9ecef;
+        }
+
+        .difference-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.05), transparent);
+            transform: translateX(-100%);
+            animation: shimmer 2s infinite;
+        }
+
+        .difference-item .label {
+            font-size: 1rem;
+            color: #666;
+            white-space: nowrap;
+            min-width: 80px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .difference-item .label::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 16px;
+            background: #3498db;
+            border-radius: 2px;
+        }
+
+        .difference-item .value {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-left: auto;
+            min-width: 120px;
+            justify-content: flex-end;
+            white-space: nowrap;
+            font-weight: 600;
+            position: relative;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            background: #f8f9fa;
+        }
+
+        .difference-item.negative {
+            border-left: 3px solid #e74c3c;
+        }
+
+        .difference-item.negative .label::before {
+            background: #e74c3c;
+        }
+
+        .difference-item.negative .value {
+            color: #e74c3c;
+            font-size: 1.2rem;
+            background: #fff5f5;
+        }
+
+        .difference-item.positive {
+            border-left: 3px solid #27ae60;
+        }
+
+        .difference-item.positive .label::before {
+            background: #27ae60;
+        }
+
+        .difference-item.positive .value {
+            color: #27ae60;
+            font-size: 1.2rem;
+            background: #f0fff4;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .difference-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .difference-item:hover::after {
+            animation: none;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-section {
+                grid-template-columns: 1fr;
+            }
+
+            .income-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                margin: 1rem auto;
+            }
+
+            .header {
+                padding: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            margin: 2rem auto;
+            padding: 2rem;
+            width: 90%;
+            max-width: 1000px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .modal-header .amount-info {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .modal-header .amount-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: nowrap;
+        }
+
+        .modal-header .amount-label {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .modal-header .amount-value {
+            font-size: 1.4rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+            background: #e8f0fe;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .modal-header .amount-value.negative {
+            color: #e74c3c;
+            background: #fde8e8;
+            border-color: rgba(231, 76, 60, 0.2);
+        }
+
+        .modal-header .amount-value.positive {
+            color: #2ecc71;
+            background: #e8f8e8;
+            border-color: rgba(46, 204, 113, 0.2);
+        }
+
+        .income-difference {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-left: 1rem;
+        }
+
+        .income-difference.positive {
+            color: #27ae60;
+            background: #e8f8e8;
+            border: 1px solid rgba(46, 204, 113, 0.2);
+        }
+
+        .income-difference.negative {
+            color: #e74c3c;
+            background: #fde8e8;
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .income-difference .value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .income-difference .percentage {
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .modal-header .amount-info {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .modal-header .amount-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .income-difference {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #666;
+            cursor: pointer;
+            padding: 0.5rem;
+            width: auto;
+            margin: 0;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            justify-content: center;
+            position: relative;
+            padding: 0 1rem;
+        }
+
+        .result-card {
+            background: var(--background-color);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            width: 100%;
+            min-width: 450px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .result-card h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .result-card h3 .difference-badge {
+            font-size: 1rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-card h3 .difference-badge.positive {
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.2);
+            background: linear-gradient(to right, #f0fff4, #fff);
+        }
+
+        .result-card h3 .difference-badge.negative {
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.2);
+            background: linear-gradient(to right, #fff5f5, #fff);
+        }
+
+        .result-card h3 .difference-badge .value {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .result-card h3 .difference-badge .percentage {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .fee-breakdown {
+            background: white;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .fee-breakdown:hover {
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .fee-breakdown p {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.8rem 0;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .fee-breakdown p:hover {
+            color: var(--primary-color);
+        }
+
+        .fee-breakdown p span {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .highlight {
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            min-height: 100px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg,
+                    rgba(52, 152, 219, 0.2),
+                    rgba(46, 204, 113, 0.2),
+                    rgba(52, 152, 219, 0.2));
+            background-size: 200% 200%;
+            animation: wave 8s ease infinite;
+            z-index: 1;
+        }
+
+        .highlight::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg,
+                    rgba(44, 62, 80, 0.9),
+                    rgba(52, 73, 94, 0.9));
+            z-index: 2;
+        }
+
+        .income-value {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 3;
+        }
+
+        .income-label {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .income-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .income-amount::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.5),
+                    transparent);
+            animation: shine 2s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            50% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .highlight:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .highlight:hover::before {
+            animation: wave 4s ease infinite;
+        }
+
+        /* 提示弹窗样式 */
+        .alert-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .alert-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .alert-icon {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .alert-message {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .alert-button {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .alert-button.primary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .alert-button.primary:hover {
+            background: #2980b9;
+        }
+
+        .alert-button.secondary {
+            background: #f8f9fa;
+            color: var(--primary-color);
+            border: 1px solid #e9ecef;
+        }
+
+        .alert-button.secondary:hover {
+            background: #e9ecef;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>汪律师收入计算器</h1>
+            <p>帮助您计算和比较传统律所与授薪律所的收入差异</p>
+        </div>
+
+        <div class="top-section">
+            <!-- 参数配置部分 -->
+            <div class="param-config">
+
+                <div class="param-group">
+                    <h3>授薪律所参数</h3>
+                    <div class="param-row">
+                        <label>基本工资（元/月）</label>
+                        <input type="number" id="salaryBaseAmount" value="1000">
+                    </div>
+                    <div class="param-row">
+                        <label>年终奖金（元/年）</label>
+                        <input type="number" id="salaryBonusAmount" value="10000">
+                    </div>
+                    <div class="param-row">
+                        <label>案源提成（%）</label>
+                        <input type="number" id="salarySourceRate" value="26" step="0.1">
+                    </div>
+                    <div class="param-row">
+                        <label>签单提成（%）</label>
+                        <input type="number" id="salarySignRate" value="4" step="0.1">
+                    </div>
+                    <div class="param-row">
+                        <label>办案提成（%）</label>
+                        <input type="number" id="salaryHandleRate" value="24" step="0.1">
+                    </div>
+                </div>
+
+                <div class="param-group">
+                    <h3>传统律所参数</h3>
+                    <div class="param-row">
+                        <label>案源提成（%）</label>
+                        <input type="number" id="traditionalSourceRate" value="90" step="0.1">
+                    </div>
+                    <div class="param-row">
+                        <label>个人所得税（%）</label>
+                        <input type="number" id="traditionalTaxRate" value="8" step="0.1">
+                    </div>
+                    <div class="param-row">
+                        <label>社保+养老保险（元/月）</label>
+                        <input type="number" id="traditionalInsuranceAmount" value="1044">
+                    </div>
+                    <div class="param-row">
+                        <label>律协会费（元/年）</label>
+                        <input type="number" id="traditionalAssociationAmount" value="2000">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 基本信息部分 -->
+            <div class="basic-info">
+                <h2>案件办理情况</h2>
+                <div class="case-input-group">
+                    <input type="number" id="caseAmount" placeholder="请输入案件金额（元）" min="0" step="0.01">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="signCheckbox" name="caseType" value="sign"
+                            onchange="handleCheckboxChange(this)">
+                        <label for="signCheckbox">签单</label>
+                        <input type="checkbox" id="handleCheckbox" name="caseType" value="handle"
+                            onchange="handleCheckboxChange(this)">
+                        <label for="handleCheckbox">办案</label>
+                        <input type="checkbox" id="noneCheckbox" name="caseType" value="none"
+                            onchange="handleCheckboxChange(this)">
+                        <label for="noneCheckbox">不签不办</label>
+                    </div>
+                </div>
+                <div class="add-case-container">
+                    <button class="add-case-btn" onclick="addCase()">
+                        <div class="plus-icon"></div>
+                        <span class="btn-text">添加案件</span>
+                    </button>
+                </div>
+
+                <div class="case-list" id="caseList">
+                    <!-- 案件列表将通过JavaScript动态添加 -->
+                </div>
+
+                <button onclick="calculate()">计算收入</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗 -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>
+                    <div class="amount-info">
+                        <div class="amount-item">
+                            <span class="amount-label">案件总金额</span>
+                            <span class="amount-value" id="totalCaseAmount">0.00元</span>
+                            <div class="income-difference" id="headerDifference"></div>
+                        </div>
+                    </div>
+                </h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="result-card">
+                    <h3>传统律所收入</h3>
+                    <div id="traditionalResult">
+                        <div class="fee-breakdown">
+                            <p>案源提成 <span id="traditionalSourceFee"></span></p>
+                            <p>律所提成 <span id="traditionalFirmFee"></span></p>
+                        </div>
+                        <div class="fee-breakdown">
+                            <p>个人所得税 <span id="traditionalTax"></span></p>
+                            <p>社保和养老保险 <span id="traditionalInsurance"></span></p>
+                            <p>律协会费 <span id="traditionalAssociation"></span></p>
+                        </div>
+                        <div class="highlight">
+                            <div class="income-value">
+                                <span class="income-label">实际月收入</span>
+                                <span class="income-amount" id="traditionalNetIncome"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <h3>授薪律所收入</h3>
+                    <div id="salaryResult">
+                        <div class="fee-breakdown">
+                            <p>案源提成 <span id="salarySourceFee"></span></p>
+                            <p>签单提成 <span id="salarySignFee"></span></p>
+                            <p>办案提成 <span id="salaryHandleFee"></span></p>
+                            <p>律所提成 <span id="salaryFirmFee"></span></p>
+                        </div>
+                        <div class="fee-breakdown">
+                            <p>基本工资 <span id="salaryBase"></span></p>
+                            <p>社保和养老保险 <span id="salaryInsurance"></span></p>
+                            <p>律协会费 <span id="salaryAssociation"></span></p>
+                            <p>年终奖金 <span id="salaryBonus"></span></p>
+                        </div>
+                        <div class="highlight">
+                            <div class="income-value">
+                                <span class="income-label">实际月收入</span>
+                                <span class="income-amount" id="salaryNetIncome"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示弹窗 -->
+    <div id="alertModal" class="alert-modal" style="display: none;">
+        <div class="alert-content">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-message" id="alertMessage">请选择案件类型</div>
+            <div class="alert-buttons">
+                <button class="alert-button primary" onclick="closeAlert()">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 处理复选框互斥逻辑
+        function handleCheckboxChange(checkbox) {
+            const checkboxes = document.querySelectorAll('input[name="caseType"]');
+
+            if (checkbox.value === 'none') {
+                if (checkbox.checked) {
+                    // 如果选择"不签不办"，禁用其他选项
+                    checkboxes.forEach(cb => {
+                        if (cb !== checkbox) {
+                            cb.checked = false;
+                            cb.disabled = true;
+                            cb.parentElement.classList.add('disabled');
+                        }
+                    });
+                } else {
+                    // 如果取消"不签不办"，启用其他选项
+                    checkboxes.forEach(cb => {
+                        cb.disabled = false;
+                        cb.parentElement.classList.remove('disabled');
+                    });
+                }
+            } else {
+                // 如果选择其他选项，取消"不签不办"
+                const noneCheckbox = document.querySelector('input[value="none"]');
+                if (noneCheckbox.checked) {
+                    noneCheckbox.checked = false;
+                    noneCheckbox.disabled = false;
+                    noneCheckbox.parentElement.classList.remove('disabled');
+                }
+            }
+        }
+
+        function showAlert(message) {
+            document.getElementById('alertMessage').textContent = message;
+            document.getElementById('alertModal').style.display = 'flex';
+        }
+
+        function closeAlert() {
+            document.getElementById('alertModal').style.display = 'none';
+        }
+
+        // 添加案件
+        function addCase() {
+            const amount = document.getElementById('caseAmount').value;
+            if (!amount) {
+                showAlert('请输入案件金额');
+                return;
+            }
+
+            const checkboxes = document.querySelectorAll('input[name="caseType"]:checked');
+            if (checkboxes.length === 0) {
+                showAlert('请选择案件类型');
+                return;
+            }
+
+            const caseList = document.getElementById('caseList');
+            const caseItem = document.createElement('div');
+            caseItem.className = 'case-item';
+
+            const types = Array.from(checkboxes).map(cb => {
+                switch (cb.value) {
+                    case 'sign': return '<span class="sign">签单</span>';
+                    case 'handle': return '<span class="handle">办案</span>';
+                    case 'none': return '<span class="none">不签不办</span>';
+                }
+            }).join('');
+
+            caseItem.innerHTML = `
+                <div class="case-info">
+                    <span class="case-amount">${parseFloat(amount).toFixed(2)}元</span>
+                    <div class="case-type">${types}</div>
+                </div>
+                <div class="case-actions">
+                    <button onclick="this.parentElement.parentElement.remove()">删除</button>
+                </div>
+            `;
+
+            caseList.appendChild(caseItem);
+
+            // 重置输入框和复选框状态
+            document.getElementById('caseAmount').value = '';
+            const allCheckboxes = document.querySelectorAll('input[name="caseType"]');
+            allCheckboxes.forEach(cb => {
+                cb.checked = false;
+                cb.disabled = false;
+                cb.parentElement.classList.remove('disabled');
+            });
+        }
+
+        // 页面加载时执行一次计算
+        window.onload = function () {
+            // 初始化页面，但不显示弹窗
+            calculate(false);
+        }
+
+        function calculate(showModal = true) {
+            // 获取所有案件信息
+            const cases = Array.from(document.querySelectorAll('.case-item')).map(item => {
+                const amount = parseFloat(item.querySelector('.case-amount').textContent);
+                const typeElements = item.querySelectorAll('.case-type span');
+                const types = Array.from(typeElements).map(span => span.className);
+                return {
+                    amount,
+                    isSign: types.includes('sign'),
+                    isHandle: types.includes('handle'),
+                    isNone: types.includes('none')
+                };
+            });
+
+            // 计算案件总金额
+            const totalCaseAmount = cases.reduce((sum, c) => sum + c.amount, 0);
+            document.getElementById('totalCaseAmount').textContent = totalCaseAmount.toFixed(2) + '元';
+
+            // 获取授薪律所参数
+            const salaryBaseAmount = parseFloat(document.getElementById('salaryBaseAmount').value) || 0;
+            const salaryBonusAmount = parseFloat(document.getElementById('salaryBonusAmount').value) || 0;
+            const salarySourceRate = parseFloat(document.getElementById('salarySourceRate').value) || 0;
+            const salarySignRate = parseFloat(document.getElementById('salarySignRate').value) || 0;
+            const salaryHandleRate = parseFloat(document.getElementById('salaryHandleRate').value) || 0;
+
+            // 获取传统律所参数
+            const traditionalSourceRate = parseFloat(document.getElementById('traditionalSourceRate').value) || 0;
+            const traditionalTaxRate = parseFloat(document.getElementById('traditionalTaxRate').value) || 0;
+            const traditionalInsuranceAmount = parseFloat(document.getElementById('traditionalInsuranceAmount').value) || 0;
+            const traditionalAssociationAmount = parseFloat(document.getElementById('traditionalAssociationAmount').value) || 0;
+
+            // 传统律所计算
+            let traditionalSourceFee = 0;
+            let traditionalFirmFee = 0;
+
+            // 计算案源提成 = 总金额 * (案源提成比例 - 个人所得税比例)
+            traditionalSourceFee = totalCaseAmount * ((traditionalSourceRate - traditionalTaxRate) / 100);
+            // 计算律所提成 = 总金额 - 案源提成
+            traditionalFirmFee = totalCaseAmount - traditionalSourceFee;
+
+            const traditionalTotalIncome = traditionalSourceFee;
+            const traditionalTax = traditionalTotalIncome * (traditionalTaxRate / 100);
+            const traditionalInsurance = traditionalInsuranceAmount;
+            const traditionalAssociation = traditionalAssociationAmount / 12;
+            const traditionalFinalIncome = traditionalTotalIncome - traditionalTax - traditionalInsurance - traditionalAssociation;
+
+            // 授薪律所计算
+            let salarySourceFee = 0;
+            let salarySignFee = 0;
+            let salaryHandleFee = 0;
+            let salaryFirmFee = 0;
+
+            cases.forEach(c => {
+                // 所有情况都计算案源提成
+                salarySourceFee += c.amount * (salarySourceRate / 100);
+
+                if (c.isNone) {
+                    // 不签不办只计算律所提成（总金额减去案源提成）
+                    salaryFirmFee += c.amount - (c.amount * (salarySourceRate / 100));
+                } else {
+                    // 签单时计算签单提成
+                    if (c.isSign) {
+                        salarySignFee += c.amount * (salarySignRate / 100);
+                    }
+
+                    // 办案时计算办案提成
+                    if (c.isHandle) {
+                        salaryHandleFee += c.amount * (salaryHandleRate / 100);
+                    }
+
+                    // 计算律所提成（总金额减去案源提成、签单提成和办案提成）
+                    const sourceFee = c.amount * (salarySourceRate / 100);
+                    const signFee = c.isSign ? c.amount * (salarySignRate / 100) : 0;
+                    const handleFee = c.isHandle ? c.amount * (salaryHandleRate / 100) : 0;
+                    salaryFirmFee += c.amount - sourceFee - signFee - handleFee;
+                }
+            });
+
+            const salaryTotalIncome = salarySourceFee + salarySignFee + salaryHandleFee;
+            const salaryBase = salaryBaseAmount;
+            const salaryInsurance = 0;
+            const salaryAssociation = 0;
+            const salaryBonus = salaryBonusAmount / 12;
+            const salaryFinalIncome = salaryTotalIncome + salaryBase + salaryBonus;
+
+            // 计算收入差值
+            const incomeDifference = ((salaryFinalIncome - traditionalFinalIncome) / traditionalFinalIncome * 100).toFixed(2);
+            const actualDifference = (salaryFinalIncome - traditionalFinalIncome).toFixed(2);
+
+            // 更新差额显示
+            const headerDifference = document.getElementById('headerDifference');
+            headerDifference.className = `income-difference ${actualDifference > 0 ? 'positive' : 'negative'}`;
+            headerDifference.innerHTML = `
+                <span class="value">${actualDifference > 0 ? '+' : ''}${actualDifference}元</span>
+                <span class="percentage">(${incomeDifference > 0 ? '+' : ''}${incomeDifference}%)</span>
+            `;
+
+            // 更新显示
+            document.getElementById('traditionalSourceFee').textContent = traditionalSourceFee.toFixed(2) + '元';
+            document.getElementById('traditionalFirmFee').textContent = traditionalFirmFee.toFixed(2) + '元';
+            document.getElementById('traditionalTax').textContent = traditionalTax.toFixed(2) + '元';
+            document.getElementById('traditionalInsurance').textContent = traditionalInsurance.toFixed(2) + '元';
+            document.getElementById('traditionalAssociation').textContent = traditionalAssociation.toFixed(2) + '元';
+            document.getElementById('traditionalNetIncome').textContent = traditionalFinalIncome.toFixed(2) + '元';
+
+            document.getElementById('salarySourceFee').textContent = salarySourceFee.toFixed(2) + '元';
+            document.getElementById('salarySignFee').textContent = salarySignFee.toFixed(2) + '元';
+            document.getElementById('salaryHandleFee').textContent = salaryHandleFee.toFixed(2) + '元';
+            document.getElementById('salaryFirmFee').textContent = salaryFirmFee.toFixed(2) + '元';
+            document.getElementById('salaryBase').textContent = salaryBase.toFixed(2) + '元';
+            document.getElementById('salaryInsurance').textContent = '律所缴纳';
+            document.getElementById('salaryAssociation').textContent = '律所缴纳';
+            document.getElementById('salaryBonus').textContent = salaryBonus.toFixed(2) + '元';
+            document.getElementById('salaryNetIncome').textContent = salaryFinalIncome.toFixed(2) + '元';
+
+            // 只在点击计算按钮时显示弹窗
+            if (showModal) {
+                document.getElementById('resultModal').style.display = 'block';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').style.display = 'none';
+        }
+
+        // 点击弹窗外部关闭弹窗
+        window.onclick = function (event) {
+            const modal = document.getElementById('resultModal');
+            const alertModal = document.getElementById('alertModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+            if (event.target == alertModal) {
+                alertModal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
